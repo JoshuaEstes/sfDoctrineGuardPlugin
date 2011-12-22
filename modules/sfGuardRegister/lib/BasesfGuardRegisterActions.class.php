@@ -10,19 +10,13 @@ class BasesfGuardRegisterActions extends sfActions
       $this->redirect('@homepage');
     }
 
-    $class = sfConfig::get('app_sf_guard_plugin_register_form', 'sfGuardRegisterForm');
-    $this->form = new $class();
+    $this->form = new sfGuardRegisterForm();
 
     if ($request->isMethod('post'))
     {
       $this->form->bind($request->getParameter($this->form->getName()));
       if ($this->form->isValid())
       {
-        $event = new sfEvent($this, 'user.filter_register');
-        $this->form = $this->dispatcher
-          ->filter($event, $this->form)
-          ->getReturnValue();
-
         $user = $this->form->save();
         $this->getUser()->signIn($user);
 

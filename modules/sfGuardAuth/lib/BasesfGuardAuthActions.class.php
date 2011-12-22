@@ -13,7 +13,7 @@
  * @package    symfony
  * @subpackage plugin
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: BasesfGuardAuthActions.class.php 32963 2011-08-28 07:56:54Z fabien $
+ * @version    SVN: $Id: BasesfGuardAuthActions.class.php 23800 2009-11-11 23:30:50Z Kris.Wallsmith $
  */
 class BasesfGuardAuthActions extends sfActions
 {
@@ -30,7 +30,7 @@ class BasesfGuardAuthActions extends sfActions
 
     if ($request->isMethod('post'))
     {
-      $this->form->bind($request->getParameter($this->form->getName()));
+      $this->form->bind($request->getParameter('signin'));
       if ($this->form->isValid())
       {
         $values = $this->form->getValues(); 
@@ -63,6 +63,8 @@ class BasesfGuardAuthActions extends sfActions
       {
         return $this->redirect($module.'/'.sfConfig::get('sf_login_action'));
       }
+
+      $this->getResponse()->setStatusCode(401);
     }
   }
 
@@ -78,5 +80,10 @@ class BasesfGuardAuthActions extends sfActions
   public function executeSecure($request)
   {
     $this->getResponse()->setStatusCode(403);
+  }
+
+  public function executePassword($request)
+  {
+    throw new sfException('This method is not yet implemented.');
   }
 }

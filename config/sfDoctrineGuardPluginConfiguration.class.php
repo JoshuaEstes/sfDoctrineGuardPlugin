@@ -15,7 +15,7 @@
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineGuardPluginConfiguration.class.php 30723 2010-08-22 09:51:02Z gimler $
+ * @version    SVN: $Id: sfDoctrineGuardPluginConfiguration.class.php 25546 2009-12-17 23:27:55Z Jonathan.Wage $
  */
 class sfDoctrineGuardPluginConfiguration extends sfPluginConfiguration
 {
@@ -24,20 +24,16 @@ class sfDoctrineGuardPluginConfiguration extends sfPluginConfiguration
    */
   public function initialize()
   {
-    if (sfConfig::get('app_sf_guard_plugin_routes_register', true))
+    if (sfConfig::get('app_sf_guard_plugin_routes_register', true) && in_array('sfGuardAuth', sfConfig::get('sf_enabled_modules', array())))
     {
-      $enabledModules = sfConfig::get('sf_enabled_modules', array());
-      if (in_array('sfGuardAuth', $enabledModules))
-      {
-        $this->dispatcher->connect('routing.load_configuration', array('sfGuardRouting', 'listenToRoutingLoadConfigurationEvent'));
-      }
+      $this->dispatcher->connect('routing.load_configuration', array('sfGuardRouting', 'listenToRoutingLoadConfigurationEvent'));
+    }
 
-      foreach (array('sfGuardUser', 'sfGuardGroup', 'sfGuardPermission', 'sfGuardRegister', 'sfGuardForgotPassword') as $module)
+    foreach (array('sfGuardUser', 'sfGuardGroup', 'sfGuardPermission', 'sfGuardRegister', 'sfGuardForgotPassword') as $module)
+    {
+      if (in_array($module, sfConfig::get('sf_enabled_modules', array())))
       {
-        if (in_array($module, $enabledModules))
-        {
-          $this->dispatcher->connect('routing.load_configuration', array('sfGuardRouting', 'addRouteFor'.str_replace('sfGuard', '', $module)));
-        }
+        $this->dispatcher->connect('routing.load_configuration', array('sfGuardRouting', 'addRouteFor'.str_replace('sfGuard', '', $module)));
       }
     }
   }

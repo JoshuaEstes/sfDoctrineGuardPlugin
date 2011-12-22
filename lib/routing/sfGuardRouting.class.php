@@ -13,7 +13,7 @@
  * @package    symfony
  * @subpackage plugin
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfGuardRouting.class.php 30723 2010-08-22 09:51:02Z gimler $
+ * @version    SVN: $Id: sfGuardRouting.class.php 25546 2009-12-17 23:27:55Z Jonathan.Wage $
  */
 class sfGuardRouting
 {
@@ -29,7 +29,7 @@ class sfGuardRouting
 
     // preprend our routes
     $r->prependRoute('sf_guard_signin', new sfRoute('/guard/login', array('module' => 'sfGuardAuth', 'action' => 'signin'))); 
-    $r->prependRoute('sf_guard_signout', new sfRoute('/guard/logout', array('module' => 'sfGuardAuth', 'action' => 'signout'))); 
+   	$r->prependRoute('sf_guard_signout', new sfRoute('/guard/logout', array('module' => 'sfGuardAuth', 'action' => 'signout'))); 
   }
 
   static public function addRouteForForgotPassword(sfEvent $event)

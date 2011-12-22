@@ -15,6 +15,5 @@ class sfGuardRequestForgotPasswordForm extends BasesfGuardRequestForgotPasswordF
    */
   public function configure()
   {
-  	$this->widgetSchema->getFormFormatter()->setTranslationCatalogue('sf_guard');
   }
 }

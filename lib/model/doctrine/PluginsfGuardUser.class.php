@@ -6,12 +6,13 @@
  * @package    sfDoctrineGuardPlugin
  * @subpackage model
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: PluginsfGuardUser.class.php 30726 2010-08-22 13:22:59Z gimler $
+ * @version    SVN: $Id: PluginsfGuardUser.class.php 25605 2009-12-18 18:55:55Z Jonathan.Wage $
  */
 abstract class PluginsfGuardUser extends BasesfGuardUser
 {
   protected
     $_groups         = null,
+    $_permissions    = null,
     $_allPermissions = null;
 
   /**
@@ -126,13 +127,6 @@ abstract class PluginsfGuardUser extends BasesfGuardUser
     $ug->setGroup($group);
 
     $ug->save($con);
-
-    // add group and permissions to local vars
-    $this->_groups[$group->getName()] = $group;
-    foreach ($group->getPermissions() as $permission)
-    {
-      $this->_allPermissions[$permission->getName()] = $permission;
-    }
   }
 
   /**
@@ -155,9 +149,6 @@ abstract class PluginsfGuardUser extends BasesfGuardUser
     $up->setPermission($permission);
 
     $up->save($con);
-
-    // add permission to local vars
-    $this->_allPermissions[$permission->getName()] = $permission;
   }
 
   /**
@@ -197,12 +188,12 @@ abstract class PluginsfGuardUser extends BasesfGuardUser
   /**
    * Returns an array of all user's permissions names.
    *
-   * @deprecated use getAllPermissionNames instate
    * @return array
    */
   public function getPermissionNames()
   {
-    return $this->getAllPermissionNames();
+    $this->loadGroupsAndPermissions();
+    return array_keys($this->_allPermissions);
   }
 
   /**
@@ -251,10 +242,18 @@ abstract class PluginsfGuardUser extends BasesfGuardUser
   public function loadGroupsAndPermissions()
   {
     $this->getAllPermissions();
-
+    
+    if (!$this->_permissions)
+    {
+      $permissions = $this->getPermissions();
+      foreach ($permissions as $permission)
+      {
+        $this->_permissions[$permission->getName()] = $permission;
+      }
+    }
+    
     if (!$this->_groups)
     {
-      $this->_groups = array();
       $groups = $this->getGroups();
       foreach ($groups as $group)
       {
@@ -269,6 +268,7 @@ abstract class PluginsfGuardUser extends BasesfGuardUser
   public function reloadGroupsAndPermissions()
   {
     $this->_groups         = null;
+    $this->_permissions    = null;
     $this->_allPermissions = null;
   }
 

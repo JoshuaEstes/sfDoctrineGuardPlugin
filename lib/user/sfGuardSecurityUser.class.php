@@ -13,7 +13,7 @@
  * @package    symfony
  * @subpackage plugin
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfGuardSecurityUser.class.php 32975 2011-09-01 15:56:35Z gimler $
+ * @version    SVN: $Id: sfGuardSecurityUser.class.php 30264 2010-07-16 16:59:21Z Jonathan.Wage $
  */
 class sfGuardSecurityUser extends sfBasicSecurityUser
 {
@@ -23,8 +23,8 @@ class sfGuardSecurityUser extends sfBasicSecurityUser
    * Initializes the sfGuardSecurityUser object.
    *
    * @param sfEventDispatcher $dispatcher The event dispatcher object
-   * @param sfStorage         $storage    The session storage object
-   * @param array             $options    An array of options
+   * @param sfStorage $storage The session storage object
+   * @param array $options An array of options
    */
   public function initialize(sfEventDispatcher $dispatcher, sfStorage $storage, $options = array())
   {
@@ -42,7 +42,6 @@ class sfGuardSecurityUser extends sfBasicSecurityUser
    * Returns the referer uri.
    *
    * @param string $default The default uri to return
-   *
    * @return string $referer The referer
    */
   public function getReferer($default)
@@ -69,9 +68,8 @@ class sfGuardSecurityUser extends sfBasicSecurityUser
   /**
    * Returns whether or not the user has the given credential.
    *
-   * @param string  $credential The credential name
-   * @param boolean $useAnd     Whether or not to use an AND condition
-   *
+   * @param string $credential The credential name
+   * @param boolean $useAnd Whether or not to use an AND condition
    * @return boolean
    */
   public function hasCredential($credential, $useAnd = true)
@@ -117,21 +115,21 @@ class sfGuardSecurityUser extends sfBasicSecurityUser
   /**
    * Signs in the user on the application.
    *
-   * @param sfGuardUser         $user     The sfGuardUser id
-   * @param boolean             $remember Whether or not to remember the user
-   * @param Doctrine_Connection $con      A Doctrine_Connection object
+   * @param sfGuardUser $user The sfGuardUser id
+   * @param boolean $remember Whether or not to remember the user
+   * @param Doctrine_Connection $con A Doctrine_Connection object
    */
   public function signIn($user, $remember = false, $con = null)
   {
-    // save last login
-    $user->setLastLogin(date('Y-m-d H:i:s'));
-    $user->save($con);
-
     // signin
     $this->setAttribute('user_id', $user->getId(), 'sfGuardSecurityUser');
     $this->setAuthenticated(true);
     $this->clearCredentials();
     $this->addCredentials($user->getAllPermissionNames());
+
+    // save last login
+    $user->setLastLogin(date('Y-m-d H:i:s'));
+    $user->save($con);
 
     // remember?
     if ($remember)
@@ -170,7 +168,6 @@ class sfGuardSecurityUser extends sfBasicSecurityUser
    * Returns a random generated key.
    *
    * @param int $len The key length
-   *
    * @return string
    */
   protected function generateRandomKey($len = 20)
@@ -253,14 +250,14 @@ class sfGuardSecurityUser extends sfBasicSecurityUser
    */
   public function getEmail()
   {
-    return $this->getGuardUser()->getEmailAddress();
+    return $this->getGuardUser()->getEmail();
   }
 
   /**
    * Sets the user's password.
    *
-   * @param string              $password The password
-   * @param Doctrine_Collection $con      A Doctrine_Connection object
+   * @param string $password The password
+   * @param Doctrine_Collection $con A Doctrine_Connection object
    */
   public function setPassword($password, $con = null)
   {
@@ -282,7 +279,6 @@ class sfGuardSecurityUser extends sfBasicSecurityUser
    * Returns whether or not the user belongs to the given group.
    *
    * @param string $name The group name
-   * 
    * @return boolean
    */
   public function hasGroup($name)
@@ -314,7 +310,6 @@ class sfGuardSecurityUser extends sfBasicSecurityUser
    * Returns whether or not the user has the given permission.
    *
    * @param string $name The permission name
-   * 
    * @return string
    */
   public function hasPermission($name)
@@ -375,8 +370,8 @@ class sfGuardSecurityUser extends sfBasicSecurityUser
   /**
    * Adds a group from its name to the current user.
    *
-   * @param string              $name The group name
-   * @param Doctrine_Connection $con  A Doctrine_Connection object
+   * @param string $name The group name
+   * @param Doctrine_Connection $con A Doctrine_Connection object
    */
   public function addGroupByName($name, $con = null)
   {
@@ -386,8 +381,8 @@ class sfGuardSecurityUser extends sfBasicSecurityUser
   /**
    * Adds a permission from its name to the current user.
    *
-   * @param string              $name The permission name
-   * @param Doctrine_Connection $con  A Doctrine_Connection object
+   * @param string $name The permission name
+   * @param Doctrine_Connection $con A Doctrine_Connection object
    */
   public function addPermissionByName($name, $con = null)
   {
